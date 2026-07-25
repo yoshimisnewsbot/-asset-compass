@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Asset Compass</title>
+  <style>
+    *{box-sizing:border-box}
+    :root{--bg:#f3f4f6;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--dark:#111827}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .app{max-width:760px;margin:auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(48px + env(safe-area-inset-bottom))}
+    header,.section-head,.hero-row,.progress-label,.asset-row,.actions{display:flex;align-items:center;justify-content:space-between}
+    h1{font-size:24px;margin:4px 0 0} h2{font-size:38px;letter-spacing:-1px;margin:8px 0 10px} h3{font-size:18px;margin:2px 0}
+    .eyebrow{font-size:11px;letter-spacing:.14em;color:var(--muted);margin:0}
+    .card{background:var(--card);border-radius:20px;padding:18px;box-shadow:0 8px 24px rgba(15,23,42,.06);margin-bottom:14px}
+    .hero{background:var(--dark);color:#fff}.hero p,.hero-row,.fx-info{color:#cbd5e1}
+    .hero p{margin:0}.hero-row{font-size:13px}.fx-info{font-size:12px;margin-top:8px}
+    .progress-wrap{margin-top:22px}.progress-label{font-size:12px;margin-bottom:8px}.progress{height:8px;background:#374151;border-radius:99px;overflow:hidden}.progress div{height:100%;background:#fff;border-radius:99px;width:0}
+    .grid.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .metric span{font-size:12px;color:var(--muted)}.metric strong{display:block;font-size:20px;margin-top:6px}
+    button{border:0;border-radius:12px;padding:11px 14px;font-weight:700;font-size:14px}
+    .primary{background:var(--dark);color:#fff}.secondary{background:#e5e7eb;color:var(--text)}.danger{background:#fee2e2;color:#b91c1c;width:100%;margin-top:10px}.icon-btn{background:#fff;font-size:20px}
+    .allocation{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;margin-top:18px}
+    .donut{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#d1d5db 0 100%);position:relative}.donut:after{content:"";width:94px;height:94px;border-radius:50%;background:#fff;position:absolute}.donut>div{z-index:1;text-align:center}.donut strong,.donut span{display:block}.donut strong{font-size:24px}.donut span{font-size:11px;color:var(--muted)}
+    .legend{display:grid;gap:9px}.legend-item{display:flex;justify-content:space-between;gap:8px;font-size:12px}.legend-label{display:flex;gap:7px;align-items:center}.dot{width:9px;height:9px;border-radius:50%}
+    .asset-row{padding:13px 2px;border-bottom:1px solid #eef2f7;cursor:pointer}.asset-row:last-child{border-bottom:0}.asset-meta strong,.asset-meta span{display:block}.asset-meta span{font-size:12px;color:var(--muted);margin-top:3px}.asset-value{text-align:right;font-weight:700}
+    .muted{color:var(--muted);font-size:13px;line-height:1.6} textarea{width:100%;height:120px;border:1px solid #d1d5db;border-radius:12px;padding:12px;margin:10px 0;font-size:12px}
+    .actions{gap:10px}.wide{flex:1}.empty{text-align:center;color:#9ca3af;padding:24px 0}.hidden{display:none}
+    dialog{border:0;border-radius:20px;padding:0;width:min(92vw,420px)}dialog form{padding:20px}label{display:block;font-size:13px;margin:14px 0}input,select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin-top:6px;font-size:16px}.check{display:flex;align-items:center;gap:8px}.check input{width:auto;margin:0}.dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+    @media(max-width:520px){.allocation{grid-template-columns:1fr}.donut{margin:auto}.legend{margin-top:4px}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <header><div><p class="eyebrow">MY ASSET COMPASS</p><h1>資産ダッシュボード</h1></div><button id="settingsBtn" class="icon-btn">⚙︎</button></header>
+
+  <section class="hero card">
+    <p>純資産</p><h2 id="netWorth">¥0</h2>
+    <div class="hero-row"><span id="changeText">前回比 —</span><span id="updatedAt">未更新</span></div>
+    <div id="fxInfo" class="fx-info">USD/JPY —</div>
+    <div class="progress-wrap"><div class="progress-label"><span>目標 ¥200,000,000</span><strong id="goalPct">0%</strong></div><div class="progress"><div id="goalBar"></div></div></div>
+  </section>
+
+  <section class="grid two">
+    <article class="card metric"><span>総資産</span><strong id="grossAssets">¥0</strong></article>
+    <article class="card metric"><span>負債</span><strong id="liabilities">¥0</strong></article>
+  </section>
+
+  <section class="card">
+    <div class="section-head"><div><p class="eyebrow">ALLOCATION</p><h3>資産配分</h3></div><button id="addBtn" class="primary">＋追加</button></div>
+    <div class="allocation"><div id="donut" class="donut"><div><strong id="assetCount">0</strong><span>項目</span></div></div><div id="legend" class="legend"></div></div>
+  </section>
+
+  <section class="card">
+    <div class="section-head"><div><p class="eyebrow">HOLDINGS</p><h3>資産一覧</h3></div></div>
+    <div id="assetList"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-head"><div><p class="eyebrow">UPDATE</p><h3>JSONで一括更新</h3></div></div>
+    <p class="muted">証券・銀行・暗号資産のスクリーンショットをChatGPTに送り、返されたJSONを貼り付けるだけで更新できます。</p>
+    <textarea id="jsonInput" placeholder='{"assets":[{"name":"楽天銀行","category":"現金","value":3848007}]}'></textarea>
+    <div class="actions"><button id="importBtn" class="primary wide">取り込む</button><button id="exportBtn" class="secondary wide">バックアップ</button></div>
+  </section>
+</main>
+
+<dialog id="assetDialog"><form method="dialog" id="assetForm">
+  <h3>資産を追加・編集</h3>
+  <input type="hidden" id="assetId" />
+  <label>名称<input id="assetName" required /></label>
+  <label>分類<select id="assetCategory"><option>現金</option><option>日本株</option><option>米国株</option><option>投資信託</option><option>暗号資産</option><option>外貨</option><option>不動産</option><option>RSU・SO</option><option>その他</option></select></label>
+  <label>評価額（円）<input id="assetValue" type="number" min="0" step="1" required /></label>
+  <label class="check"><input id="isLiability" type="checkbox" />負債として登録</label>
+  <div class="dialog-actions"><button value="cancel" class="secondary">キャンセル</button><button id="saveAssetBtn" value="default" class="primary">保存</button></div>
+  <button id="deleteAssetBtn" type="button" class="danger hidden">削除</button>
+</form></dialog>
+
+<dialog id="settingsDialog"><form method="dialog">
+  <h3>設定</h3>
+  <label>目標純資産（円）<input id="goalInput" type="number" min="1" /></label>
+  <div class="dialog-actions"><button value="cancel" class="secondary">キャンセル</button><button id="saveSettingsBtn" value="default" class="primary">保存</button></div>
+</form></dialog>
+
+<script>
+const STORAGE_KEY='asset-compass-v1';
+const COLORS=['#111827','#2563eb','#059669','#d97706','#7c3aed','#db2777','#0891b2','#65a30d','#dc2626'];
+const defaults={
+  goal:200000000,
+  assets:[
+    {id:'rakuten-bank',name:'楽天銀行 普通預金',category:'現金',value:3848007,liability:false},
+    {id:'daiwa',name:'大和証券',category:'日本株',value:8233690,liability:false},
+    {id:'igrow-funds',name:'iGrow 投資信託',category:'投資信託',value:14895530,liability:false},
+    {id:'igrow-us',name:'iGrow 米国株式',category:'米国株',value:4707548,liability:false},
+    {id:'igrow-jp',name:'iGrow 国内株式',category:'日本株',value:2191690,liability:false},
+    {id:'igrow-cash',name:'iGrow 預り金等',category:'現金',value:2421,liability:false},
+    {id:'btc',name:'Bitcoin（0.37229329 BTC）',category:'暗号資産',value:3805952,liability:false},
+    {id:'pg',name:'P&G Stock Plan（$51,212.43）',category:'米国株',value:8391413,liability:false}
+  ],
+  history:[{date:'2026-07-25',net:46076251}],
+  updatedAt:'2026-07-25T17:09:00+09:00',
+  fx:{USDJPY:163.855,asOf:'2026-07-25'}
+};
+let state=load();
+const $=id=>document.getElementById(id);
+const yen=n=>new Intl.NumberFormat('ja-JP',{style:'currency',currency:'JPY',maximumFractionDigits:0}).format(Number(n||0));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function load(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');return s?{...clone(defaults),...s}:clone(defaults)}catch(e){return clone(defaults)}}
+function totals(){const gross=state.assets.filter(a=>!a.liability).reduce((s,a)=>s+Number(a.value||0),0);const debt=state.assets.filter(a=>a.liability).reduce((s,a)=>s+Number(a.value||0),0);return{gross,debt,net:gross-debt}}
+function save(record=true){state.updatedAt=new Date().toISOString();if(record){const net=totals().net,today=new Date().toISOString().slice(0,10),last=state.history[state.history.length-1];if(last&&last.date===today)last.net=net;else state.history.push({date:today,net})}localStorage.setItem(STORAGE_KEY,JSON.stringify(state));render()}
+function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function render(){
+  const {gross,debt,net}=totals();
+  $('netWorth').textContent=yen(net);$('grossAssets').textContent=yen(gross);$('liabilities').textContent=yen(debt);
+  const pct=Math.max(0,Math.min(100,net/state.goal*100));$('goalPct').textContent=pct.toFixed(1)+'%';$('goalBar').style.width=pct+'%';
+  $('updatedAt').textContent=state.updatedAt?new Date(state.updatedAt).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'未更新';
+  $('fxInfo').textContent=state.fx?`USD/JPY ${state.fx.USDJPY}（${state.fx.asOf}）`:'USD/JPY —';
+  const prev=state.history.length>1?state.history[state.history.length-2].net:null;
+  $('changeText').textContent=prev===null?'前回比 —':`前回比 ${net-prev>=0?'+':''}${yen(net-prev)}`;
+  $('assetCount').textContent=state.assets.filter(a=>!a.liability).length;
+  renderList();renderAllocation(gross);
+}
+function renderList(){
+  $('assetList').innerHTML='';
+  if(!state.assets.length){$('assetList').innerHTML='<div class="empty">まだ資産が登録されていません</div>';return}
+  [...state.assets].sort((a,b)=>b.value-a.value).forEach(a=>{
+    const row=document.createElement('div');row.className='asset-row';
+    row.innerHTML=`<div class="asset-meta"><strong>${esc(a.name)}</strong><span>${a.liability?'負債':esc(a.category)}</span></div><div class="asset-value">${a.liability?'−':''}${yen(a.value)}</div>`;
+    row.onclick=()=>openAsset(a);$('assetList').appendChild(row);
+  });
+}
+function renderAllocation(gross){
+  const groups={};state.assets.filter(a=>!a.liability).forEach(a=>groups[a.category]=(groups[a.category]||0)+Number(a.value||0));
+  const entries=Object.entries(groups).sort((a,b)=>b[1]-a[1]);$('legend').innerHTML='';
+  if(!entries.length){$('donut').style.background='conic-gradient(#d1d5db 0 100%)';return}
+  let start=0;const segments=[];
+  entries.forEach(([name,value],i)=>{const end=start+value/gross*100,color=COLORS[i%COLORS.length];segments.push(`${color} ${start}% ${end}%`);start=end;
+    const item=document.createElement('div');item.className='legend-item';item.innerHTML=`<span class="legend-label"><i class="dot" style="background:${color}"></i>${esc(name)}</span><strong>${(value/gross*100).toFixed(1)}%</strong>`;$('legend').appendChild(item);});
+  $('donut').style.background=`conic-gradient(${segments.join(',')})`;
+}
+function openAsset(a=null){
+  $('assetId').value=a?.id||'';$('assetName').value=a?.name||'';$('assetCategory').value=a?.category||'現金';$('assetValue').value=a?.value||'';$('isLiability').checked=!!a?.liability;
+  $('deleteAssetBtn').classList.toggle('hidden',!a);$('assetDialog').showModal();
+}
+$('addBtn').onclick=()=>openAsset();
+$('settingsBtn').onclick=()=>{$('goalInput').value=state.goal;$('settingsDialog').showModal()};
+$('saveAssetBtn').onclick=e=>{e.preventDefault();if(!$('assetName').value.trim()||!$('assetValue').value)return;
+  const obj={id:$('assetId').value||uid(),name:$('assetName').value.trim(),category:$('assetCategory').value,value:Number($('assetValue').value),liability:$('isLiability').checked};
+  const i=state.assets.findIndex(x=>x.id===obj.id);if(i>=0)state.assets[i]=obj;else state.assets.push(obj);$('assetDialog').close();save();
+};
+$('deleteAssetBtn').onclick=()=>{state.assets=state.assets.filter(x=>x.id!==$('assetId').value);$('assetDialog').close();save()};
+$('saveSettingsBtn').onclick=e=>{e.preventDefault();state.goal=Number($('goalInput').value)||200000000;$('settingsDialog').close();save(false)};
+$('importBtn').onclick=()=>{try{
+  const data=JSON.parse($('jsonInput').value);
+  const merged=[...(data.assets||[]),...(data.liabilities||[]).map(x=>({...x,liability:true}))];
+  const assets=merged.map(x=>({id:x.id||uid(),name:x.name,category:x.category||'その他',value:Number(x.value||0),liability:!!x.liability}));
+  if(!assets.length)throw new Error('empty');state.assets=assets;if(data.goal)state.goal=Number(data.goal);if(data.fx)state.fx=data.fx;$('jsonInput').value='';save();alert('更新しました');
+}catch(e){alert('JSONの形式を確認してください')}};
+$('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='asset-compass-backup.json';a.click();URL.revokeObjectURL(a.href)};
+render();
+</script>
+</body>
+</html>

@@ -1,189 +1,209 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>Asset Compass</title>
-  <style>
-    *{box-sizing:border-box}
-    :root{--bg:#f3f4f6;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--dark:#111827}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    .app{max-width:760px;margin:auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(48px + env(safe-area-inset-bottom))}
-    header,.section-head,.hero-row,.progress-label,.asset-row,.actions{display:flex;align-items:center;justify-content:space-between}
-    h1{font-size:24px;margin:4px 0 0} h2{font-size:38px;letter-spacing:-1px;margin:8px 0 10px} h3{font-size:18px;margin:2px 0}
-    .eyebrow{font-size:11px;letter-spacing:.14em;color:var(--muted);margin:0}
-    .card{background:var(--card);border-radius:20px;padding:18px;box-shadow:0 8px 24px rgba(15,23,42,.06);margin-bottom:14px}
-    .hero{background:var(--dark);color:#fff}.hero p,.hero-row,.fx-info{color:#cbd5e1}
-    .hero p{margin:0}.hero-row{font-size:13px}.fx-info{font-size:12px;margin-top:8px}
-    .progress-wrap{margin-top:22px}.progress-label{font-size:12px;margin-bottom:8px}.progress{height:8px;background:#374151;border-radius:99px;overflow:hidden}.progress div{height:100%;background:#fff;border-radius:99px;width:0}
-    .grid.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .metric span{font-size:12px;color:var(--muted)}.metric strong{display:block;font-size:20px;margin-top:6px}
-    button{border:0;border-radius:12px;padding:11px 14px;font-weight:700;font-size:14px}
-    .primary{background:var(--dark);color:#fff}.secondary{background:#e5e7eb;color:var(--text)}.danger{background:#fee2e2;color:#b91c1c;width:100%;margin-top:10px}.icon-btn{background:#fff;font-size:20px}
-    .allocation{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;margin-top:18px}
-    .donut{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#d1d5db 0 100%);position:relative}.donut:after{content:"";width:94px;height:94px;border-radius:50%;background:#fff;position:absolute}.donut>div{z-index:1;text-align:center}.donut strong,.donut span{display:block}.donut strong{font-size:24px}.donut span{font-size:11px;color:var(--muted)}
-    .legend{display:grid;gap:9px}.legend-item{display:flex;justify-content:space-between;gap:8px;font-size:12px}.legend-label{display:flex;gap:7px;align-items:center}.dot{width:9px;height:9px;border-radius:50%}
-    .asset-row{padding:13px 2px;border-bottom:1px solid #eef2f7;cursor:pointer}.asset-row:last-child{border-bottom:0}.asset-meta strong,.asset-meta span{display:block}.asset-meta span{font-size:12px;color:var(--muted);margin-top:3px}.asset-value{text-align:right;font-weight:700}
-    .muted{color:var(--muted);font-size:13px;line-height:1.6} textarea{width:100%;height:120px;border:1px solid #d1d5db;border-radius:12px;padding:12px;margin:10px 0;font-size:12px}
-    .actions{gap:10px}.wide{flex:1}.empty{text-align:center;color:#9ca3af;padding:24px 0}.hidden{display:none}
-    dialog{border:0;border-radius:20px;padding:0;width:min(92vw,420px)}dialog form{padding:20px}label{display:block;font-size:13px;margin:14px 0}input,select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin-top:6px;font-size:16px}.check{display:flex;align-items:center;gap:8px}.check input{width:auto;margin:0}.dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
-    .status{display:inline-block;padding:6px 10px;border-radius:99px;font-size:12px;font-weight:700;background:#ecfdf5;color:#047857}.goal-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eef2f7;font-size:13px}.goal-row:last-child{border-bottom:0}.upload-box{border:2px dashed #d1d5db;border-radius:16px;padding:20px;text-align:center;background:#fafafa}.upload-box input{display:none}.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.thumbs img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px}.grid.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.scenario{padding:12px;border:1px solid var(--line);border-radius:14px}.scenario strong{display:block;font-size:18px;margin-top:5px}.scenario span{font-size:12px;color:var(--muted)}@media(max-width:520px){.allocation{grid-template-columns:1fr}.donut{margin:auto}.legend{margin-top:4px}.grid.three{grid-template-columns:1fr}.thumbs{grid-template-columns:repeat(2,1fr)}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Asset Compass</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f3f4f6;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--dark:#111827}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:760px;margin:auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(48px + env(safe-area-inset-bottom))}
+header,.section-head,.hero-row,.progress-label,.asset-row,.actions{display:flex;align-items:center;justify-content:space-between}
+h1{font-size:24px;margin:4px 0 0}h2{font-size:38px;letter-spacing:-1px;margin:8px 0 10px}h3{font-size:18px;margin:2px 0}
+.eyebrow{font-size:11px;letter-spacing:.14em;color:var(--muted);margin:0}
+.card{background:var(--card);border-radius:20px;padding:18px;box-shadow:0 8px 24px rgba(15,23,42,.06);margin-bottom:14px}
+.hero{background:var(--dark);color:#fff}.hero p,.hero-row,.fx-info{color:#cbd5e1}.hero p{margin:0}.hero-row{font-size:13px}.fx-info{font-size:12px;margin-top:8px}
+.progress-wrap{margin-top:22px}.progress-label{font-size:12px;margin-bottom:8px}.progress{height:8px;background:#374151;border-radius:99px;overflow:hidden}.progress div{height:100%;background:#fff;border-radius:99px;width:0}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#e5e7eb;padding:5px;border-radius:15px;margin:14px 0}
+.tab{background:transparent;color:#4b5563}.tab.active{background:#fff;color:#111827;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.grid.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.metric span{font-size:12px;color:var(--muted)}.metric strong{display:block;font-size:20px;margin-top:6px}
+button{border:0;border-radius:12px;padding:11px 14px;font-weight:700;font-size:14px}
+.primary{background:var(--dark);color:#fff}.secondary{background:#e5e7eb;color:var(--text)}.danger{background:#fee2e2;color:#b91c1c;width:100%;margin-top:10px}.icon-btn{background:#fff;font-size:20px}
+.allocation{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;margin-top:18px}
+.donut{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#d1d5db 0 100%);position:relative}.donut:after{content:"";width:94px;height:94px;border-radius:50%;background:#fff;position:absolute}.donut>div{z-index:1;text-align:center}.donut strong,.donut span{display:block}.donut strong{font-size:24px}.donut span{font-size:11px;color:var(--muted)}
+.legend{display:grid;gap:9px}.legend-item{display:flex;justify-content:space-between;gap:8px;font-size:12px}.legend-label{display:flex;gap:7px;align-items:center}.dot{width:9px;height:9px;border-radius:50%}
+.asset-row{padding:13px 2px;border-bottom:1px solid #eef2f7;cursor:pointer}.asset-row:last-child{border-bottom:0}.asset-meta strong,.asset-meta span{display:block}.asset-meta span{font-size:12px;color:var(--muted);margin-top:3px}.asset-value{text-align:right;font-weight:700}
+.owner-badge{display:inline-block;padding:3px 7px;border-radius:99px;background:#eef2ff;color:#4338ca;font-size:10px;margin-left:5px}
+.muted{color:var(--muted);font-size:13px;line-height:1.6}textarea{width:100%;height:120px;border:1px solid #d1d5db;border-radius:12px;padding:12px;margin:10px 0;font-size:12px}
+.actions{gap:10px}.wide{flex:1}.empty{text-align:center;color:#9ca3af;padding:24px 0}.hidden{display:none}
+dialog{border:0;border-radius:20px;padding:0;width:min(92vw,420px)}dialog form{padding:20px}label{display:block;font-size:13px;margin:14px 0}input,select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin-top:6px;font-size:16px}.check{display:flex;align-items:center;gap:8px}.check input{width:auto;margin:0}.dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.status{display:inline-block;padding:6px 10px;border-radius:99px;font-size:12px;font-weight:700;background:#ecfdf5;color:#047857}.goal-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eef2f7;font-size:13px}.goal-row:last-child{border-bottom:0}
+.upload-box{border:2px dashed #d1d5db;border-radius:16px;padding:20px;text-align:center;background:#fafafa}.upload-box input{display:none}.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.thumbs img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px}
+.scenario{padding:12px;border:1px solid var(--line);border-radius:14px}.scenario strong{display:block;font-size:18px;margin-top:5px}.scenario span{font-size:12px;color:var(--muted)}
+@media(max-width:520px){.allocation{grid-template-columns:1fr}.donut{margin:auto}.legend{margin-top:4px}.grid.three{grid-template-columns:1fr}.thumbs{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
 <body>
 <main class="app">
-  <header><div><p class="eyebrow">MY ASSET COMPASS</p><h1>資産ダッシュボード</h1></div><button id="settingsBtn" class="icon-btn">⚙︎</button></header>
+<header><div><p class="eyebrow">MY ASSET COMPASS</p><h1>資産ダッシュボード</h1></div><button id="settingsBtn" class="icon-btn">⚙︎</button></header>
 
-  <section class="hero card">
-    <p>純資産</p><h2 id="netWorth">¥0</h2>
-    <div class="hero-row"><span id="changeText">前回比 —</span><span id="updatedAt">未更新</span></div>
-    <div id="fxInfo" class="fx-info">USD/JPY —</div>
-    <div class="progress-wrap"><div class="progress-label"><span id="goalLabel">50歳目標 ¥250,000,000</span><strong id="goalPct">0%</strong></div><div class="progress"><div id="goalBar"></div></div></div>
-  </section>
+<div class="tabs">
+<button class="tab active" data-view="self">自分</button>
+<button class="tab" data-view="spouse">奥さん</button>
+<button class="tab" data-view="household">世帯合計</button>
+</div>
 
-  <section class="grid two">
-    <article class="card metric"><span>総資産</span><strong id="grossAssets">¥0</strong></article>
-    <article class="card metric"><span>負債</span><strong id="liabilities">¥0</strong></article>
-  </section>
+<section class="hero card">
+<p id="scopeLabel">自分の純資産</p><h2 id="netWorth">¥0</h2>
+<div class="hero-row"><span id="changeText">前回比 —</span><span id="updatedAt">未更新</span></div>
+<div id="fxInfo" class="fx-info">USD/JPY —</div>
+<div class="progress-wrap"><div class="progress-label"><span id="goalLabel">50歳目標 ¥250,000,000</span><strong id="goalPct">0%</strong></div><div class="progress"><div id="goalBar"></div></div></div>
+</section>
 
-  <section class="card">
-    <div class="section-head"><div><p class="eyebrow">ROAD TO 50</p><h3>50歳・2.5億円への進捗</h3></div><span id="paceStatus" class="status">計算中</span></div>
-    <div class="goal-row"><span>目標日</span><strong id="targetDateText">—</strong></div>
-    <div class="goal-row"><span>残り期間</span><strong id="remainingTime">—</strong></div>
-    <div class="goal-row"><span>残り金額</span><strong id="remainingAmount">—</strong></div>
-    <div class="goal-row"><span>現在設定のままの予測資産</span><strong id="projectedAtTarget">—</strong></div>
-    <div class="goal-row"><span>目標との差</span><strong id="projectedGap">—</strong></div>
-    <p class="muted">積立・RSU・運用利回りは右上の歯車から変更できます。</p>
-  </section>
+<section class="grid two">
+<article class="card metric"><span>総資産</span><strong id="grossAssets">¥0</strong></article>
+<article class="card metric"><span>負債</span><strong id="liabilities">¥0</strong></article>
+</section>
 
-  <section class="card"><div class="section-head"><div><p class="eyebrow">SCENARIOS</p><h3>想定利回り別の50歳時点</h3></div></div><div class="grid three" style="margin-top:14px"><div class="scenario"><span>年3%</span><strong id="scenario3">—</strong></div><div class="scenario"><span>年5%</span><strong id="scenario5">—</strong></div><div class="scenario"><span>年7%</span><strong id="scenario7">—</strong></div></div></section>
+<section class="card" id="goalCard">
+<div class="section-head"><div><p class="eyebrow">ROAD TO GOAL</p><h3 id="goalTitle">50歳・2.5億円への進捗</h3></div><span id="paceStatus" class="status">計算中</span></div>
+<div class="goal-row"><span>目標日</span><strong id="targetDateText">—</strong></div>
+<div class="goal-row"><span>残り期間</span><strong id="remainingTime">—</strong></div>
+<div class="goal-row"><span>残り金額</span><strong id="remainingAmount">—</strong></div>
+<div class="goal-row"><span>現在設定のままの予測資産</span><strong id="projectedAtTarget">—</strong></div>
+<div class="goal-row"><span>目標との差</span><strong id="projectedGap">—</strong></div>
+<p class="muted">目標・積立・利回りは右上の歯車から、本人・奥さん・世帯ごとに変更できます。</p>
+</section>
 
-  <section class="card">
-    <div class="section-head"><div><p class="eyebrow">SCREENSHOT UPDATE</p><h3>スクショから更新</h3></div></div>
-    <div class="upload-box"><p style="margin:0 0 10px;font-weight:700">銀行・証券・暗号資産のスクショを選択</p><p class="muted" style="margin:0 0 14px">画像は端末内でプレビューします。AI解析は次の接続工程で有効になります。</p><label for="screenshotInput" class="primary" style="display:inline-block;margin:0;cursor:pointer">＋画像を選ぶ</label><input id="screenshotInput" type="file" accept="image/*" multiple><div id="thumbs" class="thumbs"></div></div>
-    <div class="actions" style="margin-top:12px"><button id="analyzeBtn" class="primary wide">AI解析を開始</button></div><p id="analyzeNote" class="muted">Vercel FunctionsとOpenAI API接続後、残高抽出→確認→反映まで行います。</p>
-  </section>
+<section class="card"><div class="section-head"><div><p class="eyebrow">SCENARIOS</p><h3>想定利回り別の目標日時点</h3></div></div><div class="grid three" style="margin-top:14px"><div class="scenario"><span>年3%</span><strong id="scenario3">—</strong></div><div class="scenario"><span>年5%</span><strong id="scenario5">—</strong></div><div class="scenario"><span>年7%</span><strong id="scenario7">—</strong></div></div></section>
 
-  <section class="card">
-    <div class="section-head"><div><p class="eyebrow">ALLOCATION</p><h3>資産配分</h3></div><button id="addBtn" class="primary">＋追加</button></div>
-    <div class="allocation"><div id="donut" class="donut"><div><strong id="assetCount">0</strong><span>項目</span></div></div><div id="legend" class="legend"></div></div>
-  </section>
+<section class="card">
+<div class="section-head"><div><p class="eyebrow">SCREENSHOT UPDATE</p><h3>スクショから更新</h3></div></div>
+<div class="upload-box"><p style="margin:0 0 10px;font-weight:700">銀行・証券・暗号資産のスクショを選択</p>
+<label>誰の資産ですか？<select id="uploadOwner"><option value="self">自分</option><option value="spouse">奥さん</option><option value="shared">共通資産</option></select></label>
+<p class="muted" style="margin:0 0 14px">画像は端末内でプレビューします。AI解析は次の接続工程で有効になります。</p>
+<label for="screenshotInput" class="primary" style="display:inline-block;margin:0;cursor:pointer">＋画像を選ぶ</label><input id="screenshotInput" type="file" accept="image/*" multiple><div id="thumbs" class="thumbs"></div></div>
+<div class="actions" style="margin-top:12px"><button id="analyzeBtn" class="primary wide">AI解析を開始</button></div><p id="analyzeNote" class="muted">Vercel FunctionsとOpenAI API接続後、残高抽出→確認→反映まで行います。</p>
+</section>
 
-  <section class="card">
-    <div class="section-head"><div><p class="eyebrow">HOLDINGS</p><h3>資産一覧</h3></div></div>
-    <div id="assetList"></div>
-  </section>
+<section class="card"><div class="section-head"><div><p class="eyebrow">ALLOCATION</p><h3>資産配分</h3></div><button id="addBtn" class="primary">＋追加</button></div><div class="allocation"><div id="donut" class="donut"><div><strong id="assetCount">0</strong><span>項目</span></div></div><div id="legend" class="legend"></div></div></section>
 
-  <section class="card">
-    <div class="section-head"><div><p class="eyebrow">UPDATE</p><h3>JSONで一括更新</h3></div></div>
-    <p class="muted">証券・銀行・暗号資産のスクリーンショットをChatGPTに送り、返されたJSONを貼り付けるだけで更新できます。</p>
-    <textarea id="jsonInput" placeholder='{"assets":[{"name":"楽天銀行","category":"現金","value":3848007}]}'></textarea>
-    <div class="actions"><button id="importBtn" class="primary wide">取り込む</button><button id="exportBtn" class="secondary wide">バックアップ</button></div>
-  </section>
+<section class="card"><div class="section-head"><div><p class="eyebrow">HOLDINGS</p><h3>資産一覧</h3></div></div><div id="assetList"></div></section>
+
+<section class="card"><div class="section-head"><div><p class="eyebrow">UPDATE</p><h3>JSONで一括更新</h3></div></div><p class="muted">各資産に owner を付けて管理できます。self＝自分、spouse＝奥さん、shared＝共通資産。</p><textarea id="jsonInput" placeholder='{"assets":[{"name":"楽天銀行","category":"現金","value":3848007,"owner":"self"}]}'></textarea><div class="actions"><button id="importBtn" class="primary wide">取り込む</button><button id="exportBtn" class="secondary wide">バックアップ</button></div></section>
 </main>
 
-<dialog id="assetDialog"><form method="dialog" id="assetForm">
-  <h3>資産を追加・編集</h3>
-  <input type="hidden" id="assetId" />
-  <label>名称<input id="assetName" required /></label>
-  <label>分類<select id="assetCategory"><option>現金</option><option>日本株</option><option>米国株</option><option>投資信託</option><option>暗号資産</option><option>外貨</option><option>不動産</option><option>RSU・SO</option><option>その他</option></select></label>
-  <label>評価額（円）<input id="assetValue" type="number" min="0" step="1" required /></label>
-  <label class="check"><input id="isLiability" type="checkbox" />負債として登録</label>
-  <div class="dialog-actions"><button value="cancel" class="secondary">キャンセル</button><button id="saveAssetBtn" value="default" class="primary">保存</button></div>
-  <button id="deleteAssetBtn" type="button" class="danger hidden">削除</button>
-</form></dialog>
+<dialog id="assetDialog"><form method="dialog" id="assetForm"><h3>資産を追加・編集</h3><input type="hidden" id="assetId">
+<label>所有者<select id="assetOwner"><option value="self">自分</option><option value="spouse">奥さん</option><option value="shared">共通資産</option></select></label>
+<label>名称<input id="assetName" required></label>
+<label>分類<select id="assetCategory"><option>現金</option><option>日本株</option><option>米国株</option><option>投資信託</option><option>暗号資産</option><option>外貨</option><option>不動産</option><option>RSU・SO</option><option>その他</option></select></label>
+<label>評価額（円）<input id="assetValue" type="number" min="0" step="1" required></label>
+<label class="check"><input id="isLiability" type="checkbox">負債として登録</label>
+<div class="dialog-actions"><button value="cancel" class="secondary">キャンセル</button><button id="saveAssetBtn" value="default" class="primary">保存</button></div><button id="deleteAssetBtn" type="button" class="danger hidden">削除</button></form></dialog>
 
-<dialog id="settingsDialog"><form method="dialog">
-  <h3>設定</h3>
-  <label>目標純資産（円）<input id="goalInput" type="number" min="1" /></label><label>目標日<input id="targetDateInput" type="date" /></label><label>毎月の追加投資（円）<input id="monthlyInput" type="number" min="0" /></label><label>年間ボーナス投資（円）<input id="bonusInput" type="number" min="0" /></label><label>年間RSU等（円）<input id="rsuInput" type="number" min="0" /></label><label>想定運用利回り（%）<input id="returnInput" type="number" step="0.1" /></label>
-  <div class="dialog-actions"><button value="cancel" class="secondary">キャンセル</button><button id="saveSettingsBtn" value="default" class="primary">保存</button></div>
-</form></dialog>
+<dialog id="settingsDialog"><form method="dialog"><h3 id="settingsTitle">設定</h3>
+<label>目標純資産（円）<input id="goalInput" type="number" min="1"></label>
+<label>目標日<input id="targetDateInput" type="date"></label>
+<label>毎月の追加投資（円）<input id="monthlyInput" type="number" min="0"></label>
+<label>年間ボーナス投資（円）<input id="bonusInput" type="number" min="0"></label>
+<label>年間RSU等（円）<input id="rsuInput" type="number" min="0"></label>
+<label>想定運用利回り（%）<input id="returnInput" type="number" step="0.1"></label>
+<div class="dialog-actions"><button value="cancel" class="secondary">キャンセル</button><button id="saveSettingsBtn" value="default" class="primary">保存</button></div></form></dialog>
 
 <script>
-const STORAGE_KEY='asset-compass-v2',OLD_KEY='asset-compass-v1';
+const STORAGE_KEY='asset-compass-v3',OLD_KEYS=['asset-compass-v2','asset-compass-v1'];
 const COLORS=['#111827','#2563eb','#059669','#d97706','#7c3aed','#db2777','#0891b2','#65a30d','#dc2626'];
+const ownerNames={self:'自分',spouse:'奥さん',shared:'共通'};
+const defaultProfile={goal:250000000,targetDate:'2037-05-14',monthlyContribution:150000,annualBonus:2000000,annualRSU:5000000,expectedReturn:5};
 const defaults={
-  goal:250000000,
-  targetDate:'2037-05-14',monthlyContribution:150000,annualBonus:2000000,annualRSU:5000000,expectedReturn:5,
-  assets:[
-    {id:'rakuten-bank',name:'楽天銀行 普通預金',category:'現金',value:3848007,liability:false},
-    {id:'daiwa',name:'大和証券',category:'日本株',value:8233690,liability:false},
-    {id:'igrow-funds',name:'iGrow 投資信託',category:'投資信託',value:14895530,liability:false},
-    {id:'igrow-us',name:'iGrow 米国株式',category:'米国株',value:4707548,liability:false},
-    {id:'igrow-jp',name:'iGrow 国内株式',category:'日本株',value:2191690,liability:false},
-    {id:'igrow-cash',name:'iGrow 預り金等',category:'現金',value:2421,liability:false},
-    {id:'btc',name:'Bitcoin（0.37229329 BTC）',category:'暗号資産',value:3805952,liability:false},
-    {id:'pg',name:'P&G Stock Plan（$51,212.43）',category:'米国株',value:8391413,liability:false}
-  ],
-  history:[{date:'2026-07-25',net:46076251}],
-  updatedAt:'2026-07-25T17:09:00+09:00',
-  fx:{USDJPY:163.855,asOf:'2026-07-25'}
+ activeView:'self',
+ profiles:{
+  self:{...defaultProfile},
+  spouse:{goal:200000000,targetDate:'2037-05-14',monthlyContribution:0,annualBonus:0,annualRSU:0,expectedReturn:5},
+  household:{goal:450000000,targetDate:'2037-05-14',monthlyContribution:150000,annualBonus:2000000,annualRSU:5000000,expectedReturn:5}
+ },
+ assets:[
+ {id:'rakuten-bank',name:'楽天銀行 普通預金',category:'現金',value:3848007,liability:false,owner:'self'},
+ {id:'daiwa',name:'大和証券',category:'日本株',value:8233690,liability:false,owner:'self'},
+ {id:'igrow-funds',name:'iGrow 投資信託',category:'投資信託',value:14895530,liability:false,owner:'self'},
+ {id:'igrow-us',name:'iGrow 米国株式',category:'米国株',value:4707548,liability:false,owner:'self'},
+ {id:'igrow-jp',name:'iGrow 国内株式',category:'日本株',value:2191690,liability:false,owner:'self'},
+ {id:'igrow-cash',name:'iGrow 預り金等',category:'現金',value:2421,liability:false,owner:'self'},
+ {id:'btc',name:'Bitcoin（0.37229329 BTC）',category:'暗号資産',value:3805952,liability:false,owner:'self'},
+ {id:'pg',name:'P&G Stock Plan（$51,212.43）',category:'米国株',value:8391413,liability:false,owner:'self'}
+ ],
+ history:{self:[{date:'2026-07-25',net:46076251}],spouse:[],household:[{date:'2026-07-25',net:46076251}]},
+ updatedAt:'2026-07-25T17:09:00+09:00',fx:{USDJPY:163.855,asOf:'2026-07-25'}
 };
-let state=load();
 const $=id=>document.getElementById(id);
 const yen=n=>new Intl.NumberFormat('ja-JP',{style:'currency',currency:'JPY',maximumFractionDigits:0}).format(Number(n||0));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-function clone(x){return JSON.parse(JSON.stringify(x))}
-function load(){try{const raw=localStorage.getItem(STORAGE_KEY)||localStorage.getItem(OLD_KEY);const s=JSON.parse(raw||'null');return s?{...clone(defaults),...s,goal:s.goal===200000000?250000000:(s.goal||250000000),targetDate:s.targetDate||'2037-05-14',monthlyContribution:s.monthlyContribution??150000,annualBonus:s.annualBonus??2000000,annualRSU:s.annualRSU??5000000,expectedReturn:s.expectedReturn??5}:clone(defaults)}catch(e){return clone(defaults)}}
-function totals(){const gross=state.assets.filter(a=>!a.liability).reduce((s,a)=>s+Number(a.value||0),0);const debt=state.assets.filter(a=>a.liability).reduce((s,a)=>s+Number(a.value||0),0);return{gross,debt,net:gross-debt}}
-function save(record=true){state.updatedAt=new Date().toISOString();if(record){const net=totals().net,today=new Date().toISOString().slice(0,10),last=state.history[state.history.length-1];if(last&&last.date===today)last.net=net;else state.history.push({date:today,net})}localStorage.setItem(STORAGE_KEY,JSON.stringify(state));render()}
+const clone=x=>JSON.parse(JSON.stringify(x));
+function load(){
+ try{
+  let raw=localStorage.getItem(STORAGE_KEY);
+  if(!raw) for(const k of OLD_KEYS){raw=localStorage.getItem(k);if(raw)break}
+  const s=JSON.parse(raw||'null');
+  if(!s)return clone(defaults);
+  if(s.profiles)return {...clone(defaults),...s};
+  const migrated=clone(defaults);
+  migrated.assets=(s.assets||[]).map(a=>({...a,owner:a.owner||'self'}));
+  migrated.profiles.self={goal:s.goal||250000000,targetDate:s.targetDate||'2037-05-14',monthlyContribution:s.monthlyContribution??150000,annualBonus:s.annualBonus??2000000,annualRSU:s.annualRSU??5000000,expectedReturn:s.expectedReturn??5};
+  migrated.history.self=s.history||[];migrated.updatedAt=s.updatedAt||migrated.updatedAt;migrated.fx=s.fx||migrated.fx;
+  return migrated;
+ }catch(e){return clone(defaults)}
+}
+let state=load();
+function visibleAssets(){
+ if(state.activeView==='household')return state.assets;
+ if(state.activeView==='self')return state.assets.filter(a=>a.owner==='self'||a.owner==='shared');
+ return state.assets.filter(a=>a.owner==='spouse'||a.owner==='shared');
+}
+function totals(){
+ const list=visibleAssets(),gross=list.filter(a=>!a.liability).reduce((s,a)=>s+Number(a.value||0),0),debt=list.filter(a=>a.liability).reduce((s,a)=>s+Number(a.value||0),0);
+ return{gross,debt,net:gross-debt}
+}
+function profile(){return state.profiles[state.activeView]}
+function save(record=true){
+ state.updatedAt=new Date().toISOString();
+ if(record){
+  const net=totals().net,today=new Date().toISOString().slice(0,10),key=state.activeView;
+  state.history[key]=state.history[key]||[];const last=state.history[key][state.history[key].length-1];
+  if(last&&last.date===today)last.net=net;else state.history[key].push({date:today,net});
+ }
+ localStorage.setItem(STORAGE_KEY,JSON.stringify(state));render()
+}
+function monthsToTarget(){const p=profile(),now=new Date(),target=new Date(p.targetDate+'T00:00:00');return Math.max(0,(target.getFullYear()-now.getFullYear())*12+(target.getMonth()-now.getMonth())-(target.getDate()<now.getDate()?1:0))}
+function futureValue(net,rate){const p=profile(),months=monthsToTarget(),r=rate/100/12,monthly=Number(p.monthlyContribution||0)+(Number(p.annualBonus||0)+Number(p.annualRSU||0))/12;if(r===0)return net+monthly*months;return net*Math.pow(1+r,months)+monthly*((Math.pow(1+r,months)-1)/r)}
+function renderGoal(net){
+ const p=profile(),months=monthsToTarget(),years=Math.floor(months/12),rest=months%12,projected=futureValue(net,Number(p.expectedReturn||0)),gap=projected-p.goal;
+ $('targetDateText').textContent=new Date(p.targetDate+'T00:00:00').toLocaleDateString('ja-JP');$('remainingTime').textContent=`${years}年${rest}か月`;$('remainingAmount').textContent=yen(Math.max(0,p.goal-net));$('projectedAtTarget').textContent=yen(projected);$('projectedGap').textContent=(gap>=0?'+':'−')+yen(Math.abs(gap));$('paceStatus').textContent=gap>=0?'目標ペース内':'目標ペース不足';$('paceStatus').style.background=gap>=0?'#ecfdf5':'#fff7ed';$('paceStatus').style.color=gap>=0?'#047857':'#b45309';$('scenario3').textContent=yen(futureValue(net,3));$('scenario5').textContent=yen(futureValue(net,5));$('scenario7').textContent=yen(futureValue(net,7))
+}
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function monthsToTarget(){const now=new Date(),target=new Date(state.targetDate+'T00:00:00');return Math.max(0,(target.getFullYear()-now.getFullYear())*12+(target.getMonth()-now.getMonth())-(target.getDate()<now.getDate()?1:0))}
-function futureValue(net,rate){const months=monthsToTarget(),r=rate/100/12,monthly=Number(state.monthlyContribution||0)+(Number(state.annualBonus||0)+Number(state.annualRSU||0))/12;if(r===0)return net+monthly*months;return net*Math.pow(1+r,months)+monthly*((Math.pow(1+r,months)-1)/r)}
-function renderGoal(net){const months=monthsToTarget(),years=Math.floor(months/12),rest=months%12,projected=futureValue(net,Number(state.expectedReturn||0)),gap=projected-state.goal;$('targetDateText').textContent=new Date(state.targetDate+'T00:00:00').toLocaleDateString('ja-JP');$('remainingTime').textContent=`${years}年${rest}か月`;$('remainingAmount').textContent=yen(Math.max(0,state.goal-net));$('projectedAtTarget').textContent=yen(projected);$('projectedGap').textContent=(gap>=0?'+':'−')+yen(Math.abs(gap));$('paceStatus').textContent=gap>=0?'目標ペース内':'目標ペース不足';$('paceStatus').style.background=gap>=0?'#ecfdf5':'#fff7ed';$('paceStatus').style.color=gap>=0?'#047857':'#b45309';$('scenario3').textContent=yen(futureValue(net,3));$('scenario5').textContent=yen(futureValue(net,5));$('scenario7').textContent=yen(futureValue(net,7))}
 function render(){
-  const {gross,debt,net}=totals();
-  $('netWorth').textContent=yen(net);$('grossAssets').textContent=yen(gross);$('liabilities').textContent=yen(debt);$('goalLabel').textContent=`50歳目標 ${yen(state.goal)}`;
-  const pct=Math.max(0,Math.min(100,net/state.goal*100));$('goalPct').textContent=pct.toFixed(1)+'%';$('goalBar').style.width=pct+'%';
-  $('updatedAt').textContent=state.updatedAt?new Date(state.updatedAt).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'未更新';
-  $('fxInfo').textContent=state.fx?`USD/JPY ${state.fx.USDJPY}（${state.fx.asOf}）`:'USD/JPY —';
-  const prev=state.history.length>1?state.history[state.history.length-2].net:null;
-  $('changeText').textContent=prev===null?'前回比 —':`前回比 ${net-prev>=0?'+':''}${yen(net-prev)}`;
-  $('assetCount').textContent=state.assets.filter(a=>!a.liability).length;
-  renderGoal(net);renderList();renderAllocation(gross);
+ document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.view===state.activeView));
+ const {gross,debt,net}=totals(),p=profile(),label=state.activeView==='self'?'自分':state.activeView==='spouse'?'奥さん':'世帯合計';
+ $('scopeLabel').textContent=`${label}の純資産`;$('netWorth').textContent=yen(net);$('grossAssets').textContent=yen(gross);$('liabilities').textContent=yen(debt);$('goalLabel').textContent=`目標 ${yen(p.goal)}`;$('goalTitle').textContent=`${label}の目標進捗`;
+ const pct=Math.max(0,Math.min(100,net/p.goal*100));$('goalPct').textContent=pct.toFixed(1)+'%';$('goalBar').style.width=pct+'%';
+ $('updatedAt').textContent=state.updatedAt?new Date(state.updatedAt).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'未更新';
+ $('fxInfo').textContent=state.fx?`USD/JPY ${state.fx.USDJPY}（${state.fx.asOf}）`:'USD/JPY —';
+ const h=state.history[state.activeView]||[],prev=h.length>1?h[h.length-2].net:null;$('changeText').textContent=prev===null?'前回比 —':`前回比 ${net-prev>=0?'+':''}${yen(net-prev)}`;
+ $('assetCount').textContent=visibleAssets().filter(a=>!a.liability).length;renderGoal(net);renderList();renderAllocation(gross);
 }
 function renderList(){
-  $('assetList').innerHTML='';
-  if(!state.assets.length){$('assetList').innerHTML='<div class="empty">まだ資産が登録されていません</div>';return}
-  [...state.assets].sort((a,b)=>b.value-a.value).forEach(a=>{
-    const row=document.createElement('div');row.className='asset-row';
-    row.innerHTML=`<div class="asset-meta"><strong>${esc(a.name)}</strong><span>${a.liability?'負債':esc(a.category)}</span></div><div class="asset-value">${a.liability?'−':''}${yen(a.value)}</div>`;
-    row.onclick=()=>openAsset(a);$('assetList').appendChild(row);
-  });
+ const list=visibleAssets();$('assetList').innerHTML='';if(!list.length){$('assetList').innerHTML='<div class="empty">まだ資産が登録されていません</div>';return}
+ [...list].sort((a,b)=>b.value-a.value).forEach(a=>{const row=document.createElement('div');row.className='asset-row';row.innerHTML=`<div class="asset-meta"><strong>${esc(a.name)} <span class="owner-badge">${ownerNames[a.owner]||'自分'}</span></strong><span>${a.liability?'負債':esc(a.category)}</span></div><div class="asset-value">${a.liability?'−':''}${yen(a.value)}</div>`;row.onclick=()=>openAsset(a);$('assetList').appendChild(row)})
 }
 function renderAllocation(gross){
-  const groups={};state.assets.filter(a=>!a.liability).forEach(a=>groups[a.category]=(groups[a.category]||0)+Number(a.value||0));
-  const entries=Object.entries(groups).sort((a,b)=>b[1]-a[1]);$('legend').innerHTML='';
-  if(!entries.length){$('donut').style.background='conic-gradient(#d1d5db 0 100%)';return}
-  let start=0;const segments=[];
-  entries.forEach(([name,value],i)=>{const end=start+value/gross*100,color=COLORS[i%COLORS.length];segments.push(`${color} ${start}% ${end}%`);start=end;
-    const item=document.createElement('div');item.className='legend-item';item.innerHTML=`<span class="legend-label"><i class="dot" style="background:${color}"></i>${esc(name)}</span><strong>${(value/gross*100).toFixed(1)}%</strong>`;$('legend').appendChild(item);});
-  $('donut').style.background=`conic-gradient(${segments.join(',')})`;
+ const groups={};visibleAssets().filter(a=>!a.liability).forEach(a=>groups[a.category]=(groups[a.category]||0)+Number(a.value||0));
+ const entries=Object.entries(groups).sort((a,b)=>b[1]-a[1]);$('legend').innerHTML='';if(!entries.length||!gross){$('donut').style.background='conic-gradient(#d1d5db 0 100%)';return}
+ let start=0;const segments=[];entries.forEach(([name,value],i)=>{const end=start+value/gross*100,color=COLORS[i%COLORS.length];segments.push(`${color} ${start}% ${end}%`);start=end;const item=document.createElement('div');item.className='legend-item';item.innerHTML=`<span class="legend-label"><i class="dot" style="background:${color}"></i>${esc(name)}</span><strong>${(value/gross*100).toFixed(1)}%</strong>`;$('legend').appendChild(item)});$('donut').style.background=`conic-gradient(${segments.join(',')})`
 }
-function openAsset(a=null){
-  $('assetId').value=a?.id||'';$('assetName').value=a?.name||'';$('assetCategory').value=a?.category||'現金';$('assetValue').value=a?.value||'';$('isLiability').checked=!!a?.liability;
-  $('deleteAssetBtn').classList.toggle('hidden',!a);$('assetDialog').showModal();
-}
+function openAsset(a=null){$('assetId').value=a?.id||'';$('assetOwner').value=a?.owner||(state.activeView==='household'?'self':state.activeView);$('assetName').value=a?.name||'';$('assetCategory').value=a?.category||'現金';$('assetValue').value=a?.value||'';$('isLiability').checked=!!a?.liability;$('deleteAssetBtn').classList.toggle('hidden',!a);$('assetDialog').showModal()}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{state.activeView=t.dataset.view;localStorage.setItem(STORAGE_KEY,JSON.stringify(state));render()});
 $('addBtn').onclick=()=>openAsset();
-$('settingsBtn').onclick=()=>{$('goalInput').value=state.goal;$('targetDateInput').value=state.targetDate;$('monthlyInput').value=state.monthlyContribution;$('bonusInput').value=state.annualBonus;$('rsuInput').value=state.annualRSU;$('returnInput').value=state.expectedReturn;$('settingsDialog').showModal()};
-$('saveAssetBtn').onclick=e=>{e.preventDefault();if(!$('assetName').value.trim()||!$('assetValue').value)return;
-  const obj={id:$('assetId').value||uid(),name:$('assetName').value.trim(),category:$('assetCategory').value,value:Number($('assetValue').value),liability:$('isLiability').checked};
-  const i=state.assets.findIndex(x=>x.id===obj.id);if(i>=0)state.assets[i]=obj;else state.assets.push(obj);$('assetDialog').close();save();
-};
+$('settingsBtn').onclick=()=>{const p=profile(),label=state.activeView==='self'?'自分':state.activeView==='spouse'?'奥さん':'世帯合計';$('settingsTitle').textContent=`${label}の設定`;$('goalInput').value=p.goal;$('targetDateInput').value=p.targetDate;$('monthlyInput').value=p.monthlyContribution;$('bonusInput').value=p.annualBonus;$('rsuInput').value=p.annualRSU;$('returnInput').value=p.expectedReturn;$('settingsDialog').showModal()};
+$('saveAssetBtn').onclick=e=>{e.preventDefault();if(!$('assetName').value.trim()||!$('assetValue').value)return;const obj={id:$('assetId').value||uid(),owner:$('assetOwner').value,name:$('assetName').value.trim(),category:$('assetCategory').value,value:Number($('assetValue').value),liability:$('isLiability').checked};const i=state.assets.findIndex(x=>x.id===obj.id);if(i>=0)state.assets[i]=obj;else state.assets.push(obj);$('assetDialog').close();save()};
 $('deleteAssetBtn').onclick=()=>{state.assets=state.assets.filter(x=>x.id!==$('assetId').value);$('assetDialog').close();save()};
-$('saveSettingsBtn').onclick=e=>{e.preventDefault();state.goal=Number($('goalInput').value)||250000000;state.targetDate=$('targetDateInput').value||'2037-05-14';state.monthlyContribution=Number($('monthlyInput').value)||0;state.annualBonus=Number($('bonusInput').value)||0;state.annualRSU=Number($('rsuInput').value)||0;state.expectedReturn=Number($('returnInput').value)||0;$('settingsDialog').close();save(false)};
-$('importBtn').onclick=()=>{try{
-  const data=JSON.parse($('jsonInput').value);
-  const merged=[...(data.assets||[]),...(data.liabilities||[]).map(x=>({...x,liability:true}))];
-  const assets=merged.map(x=>({id:x.id||uid(),name:x.name,category:x.category||'その他',value:Number(x.value||0),liability:!!x.liability}));
-  if(!assets.length)throw new Error('empty');state.assets=assets;if(data.goal)state.goal=Number(data.goal);if(data.fx)state.fx=data.fx;$('jsonInput').value='';save();alert('更新しました');
-}catch(e){alert('JSONの形式を確認してください')}};
-$('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='asset-compass-backup.json';a.click();URL.revokeObjectURL(a.href)};
-$('screenshotInput').onchange=e=>{const files=[...e.target.files];$('thumbs').innerHTML='';files.forEach(file=>{const img=document.createElement('img');img.src=URL.createObjectURL(file);$('thumbs').appendChild(img)});$('analyzeNote').textContent=files.length?`${files.length}枚選択しました。AI接続後はこのまま解析できます。`:'画像を選択してください'};
-$('analyzeBtn').onclick=()=>alert('画面側は完成しています。次にAI接続を行います。');
+$('saveSettingsBtn').onclick=e=>{e.preventDefault();const p=profile();p.goal=Number($('goalInput').value)||1;p.targetDate=$('targetDateInput').value||'2037-05-14';p.monthlyContribution=Number($('monthlyInput').value)||0;p.annualBonus=Number($('bonusInput').value)||0;p.annualRSU=Number($('rsuInput').value)||0;p.expectedReturn=Number($('returnInput').value)||0;$('settingsDialog').close();save(false)};
+$('importBtn').onclick=()=>{try{const data=JSON.parse($('jsonInput').value),merged=[...(data.assets||[]),...(data.liabilities||[]).map(x=>({...x,liability:true}))],assets=merged.map(x=>({id:x.id||uid(),owner:x.owner||'self',name:x.name,category:x.category||'その他',value:Number(x.value||0),liability:!!x.liability}));if(!assets.length)throw new Error('empty');state.assets=assets;if(data.fx)state.fx=data.fx;$('jsonInput').value='';save();alert('更新しました')}catch(e){alert('JSONの形式を確認してください')}};
+$('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='asset-compass-backup.json';a.click();URL.revokeObjectURL(a.href)};
+$('screenshotInput').onchange=e=>{const files=[...e.target.files];$('thumbs').innerHTML='';files.forEach(file=>{const img=document.createElement('img');img.src=URL.createObjectURL(file);$('thumbs').appendChild(img)});$('analyzeNote').textContent=files.length?`${ownerNames[$('uploadOwner').value]}の画像を${files.length}枚選択しました。`:'画像を選択してください'};
+$('analyzeBtn').onclick=()=>alert(`${ownerNames[$('uploadOwner').value]}の資産として解析する設計です。AI接続は次の工程で行います。`);
 render();
 </script>
 </body>

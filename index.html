@@ -30,7 +30,7 @@
     .muted{color:var(--muted);font-size:13px;line-height:1.6} textarea{width:100%;height:120px;border:1px solid #d1d5db;border-radius:12px;padding:12px;margin:10px 0;font-size:12px}
     .actions{gap:10px}.wide{flex:1}.empty{text-align:center;color:#9ca3af;padding:24px 0}.hidden{display:none}
     dialog{border:0;border-radius:20px;padding:0;width:min(92vw,420px)}dialog form{padding:20px}label{display:block;font-size:13px;margin:14px 0}input,select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin-top:6px;font-size:16px}.check{display:flex;align-items:center;gap:8px}.check input{width:auto;margin:0}.dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
-    @media(max-width:520px){.allocation{grid-template-columns:1fr}.donut{margin:auto}.legend{margin-top:4px}}
+    .status{display:inline-block;padding:6px 10px;border-radius:99px;font-size:12px;font-weight:700;background:#ecfdf5;color:#047857}.goal-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eef2f7;font-size:13px}.goal-row:last-child{border-bottom:0}.upload-box{border:2px dashed #d1d5db;border-radius:16px;padding:20px;text-align:center;background:#fafafa}.upload-box input{display:none}.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.thumbs img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px}.grid.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.scenario{padding:12px;border:1px solid var(--line);border-radius:14px}.scenario strong{display:block;font-size:18px;margin-top:5px}.scenario span{font-size:12px;color:var(--muted)}@media(max-width:520px){.allocation{grid-template-columns:1fr}.donut{margin:auto}.legend{margin-top:4px}.grid.three{grid-template-columns:1fr}.thumbs{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
 <body>
@@ -41,12 +41,30 @@
     <p>純資産</p><h2 id="netWorth">¥0</h2>
     <div class="hero-row"><span id="changeText">前回比 —</span><span id="updatedAt">未更新</span></div>
     <div id="fxInfo" class="fx-info">USD/JPY —</div>
-    <div class="progress-wrap"><div class="progress-label"><span>目標 ¥200,000,000</span><strong id="goalPct">0%</strong></div><div class="progress"><div id="goalBar"></div></div></div>
+    <div class="progress-wrap"><div class="progress-label"><span id="goalLabel">50歳目標 ¥250,000,000</span><strong id="goalPct">0%</strong></div><div class="progress"><div id="goalBar"></div></div></div>
   </section>
 
   <section class="grid two">
     <article class="card metric"><span>総資産</span><strong id="grossAssets">¥0</strong></article>
     <article class="card metric"><span>負債</span><strong id="liabilities">¥0</strong></article>
+  </section>
+
+  <section class="card">
+    <div class="section-head"><div><p class="eyebrow">ROAD TO 50</p><h3>50歳・2.5億円への進捗</h3></div><span id="paceStatus" class="status">計算中</span></div>
+    <div class="goal-row"><span>目標日</span><strong id="targetDateText">—</strong></div>
+    <div class="goal-row"><span>残り期間</span><strong id="remainingTime">—</strong></div>
+    <div class="goal-row"><span>残り金額</span><strong id="remainingAmount">—</strong></div>
+    <div class="goal-row"><span>現在設定のままの予測資産</span><strong id="projectedAtTarget">—</strong></div>
+    <div class="goal-row"><span>目標との差</span><strong id="projectedGap">—</strong></div>
+    <p class="muted">積立・RSU・運用利回りは右上の歯車から変更できます。</p>
+  </section>
+
+  <section class="card"><div class="section-head"><div><p class="eyebrow">SCENARIOS</p><h3>想定利回り別の50歳時点</h3></div></div><div class="grid three" style="margin-top:14px"><div class="scenario"><span>年3%</span><strong id="scenario3">—</strong></div><div class="scenario"><span>年5%</span><strong id="scenario5">—</strong></div><div class="scenario"><span>年7%</span><strong id="scenario7">—</strong></div></div></section>
+
+  <section class="card">
+    <div class="section-head"><div><p class="eyebrow">SCREENSHOT UPDATE</p><h3>スクショから更新</h3></div></div>
+    <div class="upload-box"><p style="margin:0 0 10px;font-weight:700">銀行・証券・暗号資産のスクショを選択</p><p class="muted" style="margin:0 0 14px">画像は端末内でプレビューします。AI解析は次の接続工程で有効になります。</p><label for="screenshotInput" class="primary" style="display:inline-block;margin:0;cursor:pointer">＋画像を選ぶ</label><input id="screenshotInput" type="file" accept="image/*" multiple><div id="thumbs" class="thumbs"></div></div>
+    <div class="actions" style="margin-top:12px"><button id="analyzeBtn" class="primary wide">AI解析を開始</button></div><p id="analyzeNote" class="muted">Vercel FunctionsとOpenAI API接続後、残高抽出→確認→反映まで行います。</p>
   </section>
 
   <section class="card">
@@ -80,15 +98,16 @@
 
 <dialog id="settingsDialog"><form method="dialog">
   <h3>設定</h3>
-  <label>目標純資産（円）<input id="goalInput" type="number" min="1" /></label>
+  <label>目標純資産（円）<input id="goalInput" type="number" min="1" /></label><label>目標日<input id="targetDateInput" type="date" /></label><label>毎月の追加投資（円）<input id="monthlyInput" type="number" min="0" /></label><label>年間ボーナス投資（円）<input id="bonusInput" type="number" min="0" /></label><label>年間RSU等（円）<input id="rsuInput" type="number" min="0" /></label><label>想定運用利回り（%）<input id="returnInput" type="number" step="0.1" /></label>
   <div class="dialog-actions"><button value="cancel" class="secondary">キャンセル</button><button id="saveSettingsBtn" value="default" class="primary">保存</button></div>
 </form></dialog>
 
 <script>
-const STORAGE_KEY='asset-compass-v1';
+const STORAGE_KEY='asset-compass-v2',OLD_KEY='asset-compass-v1';
 const COLORS=['#111827','#2563eb','#059669','#d97706','#7c3aed','#db2777','#0891b2','#65a30d','#dc2626'];
 const defaults={
-  goal:200000000,
+  goal:250000000,
+  targetDate:'2037-05-14',monthlyContribution:150000,annualBonus:2000000,annualRSU:5000000,expectedReturn:5,
   assets:[
     {id:'rakuten-bank',name:'楽天銀行 普通預金',category:'現金',value:3848007,liability:false},
     {id:'daiwa',name:'大和証券',category:'日本株',value:8233690,liability:false},
@@ -108,20 +127,23 @@ const $=id=>document.getElementById(id);
 const yen=n=>new Intl.NumberFormat('ja-JP',{style:'currency',currency:'JPY',maximumFractionDigits:0}).format(Number(n||0));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 function clone(x){return JSON.parse(JSON.stringify(x))}
-function load(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');return s?{...clone(defaults),...s}:clone(defaults)}catch(e){return clone(defaults)}}
+function load(){try{const raw=localStorage.getItem(STORAGE_KEY)||localStorage.getItem(OLD_KEY);const s=JSON.parse(raw||'null');return s?{...clone(defaults),...s,goal:s.goal===200000000?250000000:(s.goal||250000000),targetDate:s.targetDate||'2037-05-14',monthlyContribution:s.monthlyContribution??150000,annualBonus:s.annualBonus??2000000,annualRSU:s.annualRSU??5000000,expectedReturn:s.expectedReturn??5}:clone(defaults)}catch(e){return clone(defaults)}}
 function totals(){const gross=state.assets.filter(a=>!a.liability).reduce((s,a)=>s+Number(a.value||0),0);const debt=state.assets.filter(a=>a.liability).reduce((s,a)=>s+Number(a.value||0),0);return{gross,debt,net:gross-debt}}
 function save(record=true){state.updatedAt=new Date().toISOString();if(record){const net=totals().net,today=new Date().toISOString().slice(0,10),last=state.history[state.history.length-1];if(last&&last.date===today)last.net=net;else state.history.push({date:today,net})}localStorage.setItem(STORAGE_KEY,JSON.stringify(state));render()}
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function monthsToTarget(){const now=new Date(),target=new Date(state.targetDate+'T00:00:00');return Math.max(0,(target.getFullYear()-now.getFullYear())*12+(target.getMonth()-now.getMonth())-(target.getDate()<now.getDate()?1:0))}
+function futureValue(net,rate){const months=monthsToTarget(),r=rate/100/12,monthly=Number(state.monthlyContribution||0)+(Number(state.annualBonus||0)+Number(state.annualRSU||0))/12;if(r===0)return net+monthly*months;return net*Math.pow(1+r,months)+monthly*((Math.pow(1+r,months)-1)/r)}
+function renderGoal(net){const months=monthsToTarget(),years=Math.floor(months/12),rest=months%12,projected=futureValue(net,Number(state.expectedReturn||0)),gap=projected-state.goal;$('targetDateText').textContent=new Date(state.targetDate+'T00:00:00').toLocaleDateString('ja-JP');$('remainingTime').textContent=`${years}年${rest}か月`;$('remainingAmount').textContent=yen(Math.max(0,state.goal-net));$('projectedAtTarget').textContent=yen(projected);$('projectedGap').textContent=(gap>=0?'+':'−')+yen(Math.abs(gap));$('paceStatus').textContent=gap>=0?'目標ペース内':'目標ペース不足';$('paceStatus').style.background=gap>=0?'#ecfdf5':'#fff7ed';$('paceStatus').style.color=gap>=0?'#047857':'#b45309';$('scenario3').textContent=yen(futureValue(net,3));$('scenario5').textContent=yen(futureValue(net,5));$('scenario7').textContent=yen(futureValue(net,7))}
 function render(){
   const {gross,debt,net}=totals();
-  $('netWorth').textContent=yen(net);$('grossAssets').textContent=yen(gross);$('liabilities').textContent=yen(debt);
+  $('netWorth').textContent=yen(net);$('grossAssets').textContent=yen(gross);$('liabilities').textContent=yen(debt);$('goalLabel').textContent=`50歳目標 ${yen(state.goal)}`;
   const pct=Math.max(0,Math.min(100,net/state.goal*100));$('goalPct').textContent=pct.toFixed(1)+'%';$('goalBar').style.width=pct+'%';
   $('updatedAt').textContent=state.updatedAt?new Date(state.updatedAt).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'未更新';
   $('fxInfo').textContent=state.fx?`USD/JPY ${state.fx.USDJPY}（${state.fx.asOf}）`:'USD/JPY —';
   const prev=state.history.length>1?state.history[state.history.length-2].net:null;
   $('changeText').textContent=prev===null?'前回比 —':`前回比 ${net-prev>=0?'+':''}${yen(net-prev)}`;
   $('assetCount').textContent=state.assets.filter(a=>!a.liability).length;
-  renderList();renderAllocation(gross);
+  renderGoal(net);renderList();renderAllocation(gross);
 }
 function renderList(){
   $('assetList').innerHTML='';
@@ -146,13 +168,13 @@ function openAsset(a=null){
   $('deleteAssetBtn').classList.toggle('hidden',!a);$('assetDialog').showModal();
 }
 $('addBtn').onclick=()=>openAsset();
-$('settingsBtn').onclick=()=>{$('goalInput').value=state.goal;$('settingsDialog').showModal()};
+$('settingsBtn').onclick=()=>{$('goalInput').value=state.goal;$('targetDateInput').value=state.targetDate;$('monthlyInput').value=state.monthlyContribution;$('bonusInput').value=state.annualBonus;$('rsuInput').value=state.annualRSU;$('returnInput').value=state.expectedReturn;$('settingsDialog').showModal()};
 $('saveAssetBtn').onclick=e=>{e.preventDefault();if(!$('assetName').value.trim()||!$('assetValue').value)return;
   const obj={id:$('assetId').value||uid(),name:$('assetName').value.trim(),category:$('assetCategory').value,value:Number($('assetValue').value),liability:$('isLiability').checked};
   const i=state.assets.findIndex(x=>x.id===obj.id);if(i>=0)state.assets[i]=obj;else state.assets.push(obj);$('assetDialog').close();save();
 };
 $('deleteAssetBtn').onclick=()=>{state.assets=state.assets.filter(x=>x.id!==$('assetId').value);$('assetDialog').close();save()};
-$('saveSettingsBtn').onclick=e=>{e.preventDefault();state.goal=Number($('goalInput').value)||200000000;$('settingsDialog').close();save(false)};
+$('saveSettingsBtn').onclick=e=>{e.preventDefault();state.goal=Number($('goalInput').value)||250000000;state.targetDate=$('targetDateInput').value||'2037-05-14';state.monthlyContribution=Number($('monthlyInput').value)||0;state.annualBonus=Number($('bonusInput').value)||0;state.annualRSU=Number($('rsuInput').value)||0;state.expectedReturn=Number($('returnInput').value)||0;$('settingsDialog').close();save(false)};
 $('importBtn').onclick=()=>{try{
   const data=JSON.parse($('jsonInput').value);
   const merged=[...(data.assets||[]),...(data.liabilities||[]).map(x=>({...x,liability:true}))];
@@ -160,6 +182,8 @@ $('importBtn').onclick=()=>{try{
   if(!assets.length)throw new Error('empty');state.assets=assets;if(data.goal)state.goal=Number(data.goal);if(data.fx)state.fx=data.fx;$('jsonInput').value='';save();alert('更新しました');
 }catch(e){alert('JSONの形式を確認してください')}};
 $('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='asset-compass-backup.json';a.click();URL.revokeObjectURL(a.href)};
+$('screenshotInput').onchange=e=>{const files=[...e.target.files];$('thumbs').innerHTML='';files.forEach(file=>{const img=document.createElement('img');img.src=URL.createObjectURL(file);$('thumbs').appendChild(img)});$('analyzeNote').textContent=files.length?`${files.length}枚選択しました。AI接続後はこのまま解析できます。`:'画像を選択してください'};
+$('analyzeBtn').onclick=()=>alert('画面側は完成しています。次にAI接続を行います。');
 render();
 </script>
 </body>
